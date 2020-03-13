@@ -1,0 +1,195 @@
+﻿@model CIM.Web.Infrastructure.PaginationSet<CIM.Web.Models.PICViewModel>
+
+@{
+    ViewBag.Title = "People in Charge Management";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-header">
+    <div class="row">
+        <div class="col-md-10"><h3 class="mb-4">People in Charge Management</h3></div>
+    </div>
+    @Html.Partial("_Search")
+</div>
+@if (TempData["AlertMessage"] != null)
+{
+    <div id="AlertPIC" class="alert @TempData["AlertType"] hide">
+        @TempData["AlertMessage"]
+    </div>
+}
+@if (Model.Count > 0)
+{
+    using (Html.BeginForm("EditSelect", "PIC", FormMethod.Get, new { @id = "form-edit" }))
+    {
+        <button class="btn btn-link edit-select-btn" name="selectListItem">Edit Select</button>
+    }
+    <table class="table table-responsive-md table-bordered table-hover">
+        <thead class="thead-light">
+            <tr>
+                <th>
+                    @Html.DisplayName("Area Code")
+                </th>
+                <th>
+                    @Html.DisplayName("Area Name")
+                </th>
+                <th>
+                    @Html.DisplayName("Asset Type")
+                </th>
+                <th>
+                    @Html.DisplayName("Technician")
+                </th>
+                <th>
+                    @Html.DisplayName("Start Date")
+                </th>
+                <th>
+                    @Html.DisplayName("End Date")
+                </th>
+                <th>
+                    <input type="checkbox" id="checkall" />
+                </th>
+                <th>
+                    @Html.DisplayName("Action")
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Area.AreaCode)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Area.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AssetType.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ApplicationUser.UserName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StartDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EndDate)
+                    </td>
+                    <td>
+                        <div id="checkboxes">
+                            <input type="checkbox" name="assetCheckedList" id="pic-@item.ID" class="select-pic" value="@item.ID" />
+                        </div>
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "mr-1" })|
+                        @Html.ActionLink("Details", "Details", new { id = item.ID })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <input type="hidden" id="referrer-uri" value="@((Request.UrlReferrer == null) ? "/pic" : Request.UrlReferrer.LocalPath.ToString())" />
+}
+else
+{
+    <div class="result-search-msg">
+        <p> No Record Found!</p>
+    </div>
+}
+@Html.Partial("_Pagination", Model)
+
+@section Scripts {
+    <script type="text/javascript">
+
+        var selectedArr = loadSelected();
+
+        $(document).ready(function () {
+            $('#AlertPIC').removeClass('hide');
+            $('#AlertPIC').delay(3000).slideUp(500);
+            hideEditForm(selectedArr)
+            var isReferrer = $("#referrer-uri").val();
+            if (isReferrer.toLowerCase() !== '/pic') {
+                sessionStorage.clear();
+                selectedArr = [];
+                hideEditForm(selectedArr);
+            };
+            $("#checkall").prop('checked', false);
+
+            //set state checkbox
+            selectedArr.forEach(function (id) {
+                $('#pic-' + id).prop('checked', true);
+            });
+
+            $("#checkall").click(function () {
+                var status = $("#checkall").prop('checked');
+                toggleChecked(status);
+                if (status) {
+                    $.each($('.select-pic'), function () {
+                        var found = $.inArray($(this).val(), selectedArr);
+                        if (found === -1) {
+                            selectedArr.push($(this).val());
+                        }
+                    });
+                    push(selectedArr);
+                } else {
+                    $.each($('.select-pic'), function () {
+                        var val = $(this).val();
+                        selectedArr.forEach(function (i, item) {
+                            if (i === val) {
+                                selectedArr.splice(item, 1);
+                            }
+                        });
+                    });
+                    push(selectedArr);
+                }
+                hideEditForm(selectedArr)
+            });
+
+            $('.select-pic').on('change', function () {
+                var val = $(this).val();
+                var state = $(this).is(':checked');
+                if (state) {
+                    var found = $.inArray(val, selectedArr);
+                    if (found == -1) {
+                        selectedArr.push(val);
+                    }
+                } else {
+                    selectedArr.forEach(function (i, item) {
+                        if (i === val) {
+                            selectedArr.splice(item, 1);
+                        }
+                    });
+                }
+                push(selectedArr);
+                hideEditForm(selectedArr)
+            });
+
+            $('.edit-select-btn').on('click', function () {
+                $(this).val(selectedArr);
+                sessionStorage.clear();
+                $('#form-edit').submit();
+            });
+        });
+
+        function hideEditForm(arr) {
+            if (arr.length) {
+                $('.edit-select-btn').show();
+            } else {
+                $('.edit-select-btn').hide();
+            }
+        }
+        function toggleChecked(status) {
+            $("#checkboxes input").each(function () {
+                $(this).prop("checked", status);
+            });
+        };
+
+        function loadSelected() {
+            return JSON.parse(sessionStorage.getItem('picSelected')) || []
+        };
+
+        function push(arr) {
+            sessionStorage.setItem('picSelected', JSON.stringify(arr));
+        };
+    </script>
+}

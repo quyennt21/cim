@@ -1,0 +1,86 @@
+﻿@model CIM.Web.Infrastructure.PaginationSet<CIM.Web.Models.MailConfigViewModel>
+@{
+    ViewBag.Title = "Mail Config";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-header">
+    <div class="row">
+        <div class="col-md-4"><h3 class="mb-4">Mail Config</h3></div>
+        <br />
+    </div>
+    @Html.Partial("_Search")
+</div>
+@if (TempData["AlertMessage"] != null)
+{
+    <div id="AlertMail" class="alert @TempData["AlertType"] hide">
+        @TempData["AlertMessage"]
+    </div>
+}
+@if (Model.Count > 0)
+{
+    <table id="table" class="table table-responsive-md table-bordered table-hover">
+        <thead class="thead-light">
+            <tr>
+                <th>
+                    @Html.DisplayName("Email Address")
+                </th>
+                <th>
+                    @Html.DisplayName("Host")
+                </th>
+                <th>
+                    @Html.DisplayName("Port")
+                </th>
+                <th>
+                    @Html.DisplayName("Enabled SSL")
+                </th>
+                <th>
+                    @Html.DisplayName("Count")
+                </th>
+                <th>@Html.DisplayName("Action")</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EmailAddress)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Host)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Port)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EnabledSSL)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Count)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="result-search-msg">
+        <p>No results found</p>
+    </div>
+}
+@Html.Partial("_Pagination", Model)
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#AlertMail').removeClass('hide');
+            $('#AlertMail').delay(3000).slideUp(500);
+        });
+    </script>
+}

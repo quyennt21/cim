@@ -1,0 +1,95 @@
+﻿@model IEnumerable<CIM.Web.Models.ReportViewModel>
+
+@{
+    ViewBag.Title = "Report Manager";
+    //    var listStatus = new SelectList(ViewBag.listStatus, "Value", "Text").ToList();
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    var count = Model.ToList().Count;
+}
+@if (count > 0)
+{
+    using (Html.BeginForm("ListReportArea", "Report", FormMethod.Post, new { @class = "form-inline form-label-left mb-4 ", autocomplete = "off", enctype = "multipart/form-data" }))
+    {
+@Html.AntiForgeryToken()
+<table class="table table-bordered table-hover">
+    <thead class="thead-light">
+        <tr>
+            <th>
+                @Html.DisplayName("Asset Name")
+            </th>
+            <th>
+                @Html.DisplayName("Comment")
+            </th>
+            <th>
+                @Html.DisplayName("Status")
+            </th>
+            <th>
+                @Html.DisplayName("Update Status")
+            </th>
+        </tr>
+    </thead>
+    @foreach (var item in Model)
+            {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Asset.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Comment)
+        </td>
+        <td>
+            @{
+                            var status = @Html.DisplayFor(modelItem => item.status).ToString();
+            }
+            @if (status.Equals("1"))
+                        {
+            <div class="text-muted font-weight-bold">
+                OPEN
+            </div>
+                        }
+                        else if (status.Equals("2"))
+                        {
+            <div class="text-primary font-weight-bold">
+                PROCESS
+            </div>
+                        }
+                        else if (status.Equals("3"))
+                        {
+            <div class="text-success font-weight-bold">
+                DONE
+            </div>
+                        }
+                        else if (status.Equals("4"))
+                        {
+            <div class="text-warning font-weight-bold">
+                UPWORK
+            </div>
+                        }
+                        else
+                        {
+            <div class="text-danger font-weight-bold">
+                CANCEL
+            </div>
+                        }
+            @* @Html.DisplayFor(modelItem => item.status) *@
+        </td>
+        <td>
+            @Html.ActionLink("Update", "Edit", new { idA = "A" + item.ID })
+        </td>
+    </tr>
+            }
+</table>
+
+    }
+}
+else
+{
+<div class="result-search-msg">
+    <br /><br />
+    <div>
+        <h5 class="text-primary">No Asset is reported</h5>
+    </div>
+</div>
+}

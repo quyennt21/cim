@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>@ViewBag.Title - FPT Campus Infrastructure Management</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <!-- Start Header -->
+    @Html.Partial("_Header")
+    <!-- End header -->
+    <!-- Start Content -->
+    <div class="container body-content mt-1">
+        @RenderBody()
+    </div>
+    <!-- End Content -->
+    <!-- Start footer -->
+    @Html.Partial("_Footer")
+    <!-- End footer -->
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

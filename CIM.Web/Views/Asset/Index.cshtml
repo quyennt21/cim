@@ -1,0 +1,126 @@
+﻿@using OfficeOpenXml.FormulaParsing.Excel.Functions.Information
+@model CIM.Web.Infrastructure.PaginationSet<CIM.Web.Models.AssetViewModel>
+@{
+    ViewBag.Title = "Asset Management";
+    var pageIndex = Model.Page;
+}
+<div class="page-header">
+    <div class="row">
+        <div class="col-md-4"><h3 class="mb-4">Asset Management</h3></div>
+    </div>
+    @Html.Partial("_Search")
+</div>
+
+@*<div class="row">
+        <div class="col-md-2">
+            <a role="button" class="" href='@Url.Action("Create", "Asset")'>Create new asset</a>
+        </div>
+    </div>*@
+@if (TempData["AlertMessage"] != null)
+{
+    <div id="AlertAsset" class="alert @TempData["AlertType"] hide">
+        @TempData["AlertMessage"]
+    </div>
+}
+<p></p>
+@if (Model.Count > 0)
+{
+    <table id="table" class="table table-responsive-md table-hover table-bordered">
+        <thead class="thead-light">
+            <tr>
+                <th>
+                    Asset Name
+                </th>
+                <th>
+                    Location
+                </th>
+                <th>
+                    Area
+                </th>
+                <th>
+                    Asset Type
+                </th>
+                <th>
+                    Asset Code
+                </th>
+                <th>
+                    User Create
+                </th>
+                <th>
+                    Quantity
+                </th>
+                <th>
+                    Start Date
+                </th>
+                <th>
+                    In service
+                </th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Area.Location.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Area.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AssetType.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AssetCode)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ApplicationUser.UserName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Quantity)
+                    </td>
+                    <td>
+                        @{
+                            var startDate = @Html.DisplayFor(modelItem => item.StartDate).ToString();
+                        }
+                        @if (startDate.Equals("1900-01-01") || startDate == null)
+                        {
+                            <div>N/A</div>
+                        }
+                        else
+                        {
+                            @startDate
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Active)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "mr-1" }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+                        <a href="@Url.Action("Create", "warranty", new { assetId = item.ID })">Create Warranty</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="result-search-msg">
+        <p>No results found</p>
+    </div>
+}
+@Html.Partial("_Pagination", Model)
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#AlertAsset').removeClass('hide');
+            $('#AlertAsset').delay(3000).slideUp(500);
+        });
+    </script>
+}

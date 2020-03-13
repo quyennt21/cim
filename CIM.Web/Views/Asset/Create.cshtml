@@ -1,0 +1,123 @@
+﻿@model CIM.Web.Models.AssetViewModel
+@{
+    ViewBag.Title = "Create Asset";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h5>Create Asset</h5>
+
+@using (Html.BeginForm())
+{
+@Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <p></p>
+    <div class="row">
+        <strong class="col-md-2">Asset Type: </strong>
+        <div class="col">
+            @Html.DropDownList("AssetTypeID", null, htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.AssetTypeID, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    @if (@ViewBag.IdArea == null)
+    {
+    <p></p>
+    <div class="row">
+        <strong class="col-md-2">Area: </strong>
+        <div class="col">
+            @Html.DropDownList("AreaID", null, htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.AreaID, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    }
+    else
+    {
+    @Html.Hidden("AreaID", (object)@ViewBag.IdArea)
+    <input type="hidden" value="@ViewBag.IdArea" name="idArea" />
+    }
+    <p></p>
+    <div class="row">
+        <strong class="col-md-2">Name: </strong>
+        <div class="col">
+            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    @*<p></p>
+        <div class="row">
+            <strong class="col-md-2">Image: </strong>
+            <div class="col">
+                <div class="col-md-10">
+                    <input type="file" name="file" value="Browse" />
+                </div>
+            </div>
+        </div>*@
+    <p></p>
+    <div class="row">
+        <strong class="col-md-2">Type Asset Code: </strong>
+        <div class="col-md-1">
+            <input value="1" type="radio" data-val="true" checked="checked" data-val-required="The SelectedOption field is required." id="SelectedOption" name="SelectedOption">
+            <label for="SelectedOption">Asset</label>
+            <input type="hidden" data-val="true" data-val-required="The Id field is required." id="PollOptions_0__Id" name="PollOptions[0].Id" value="1">
+            <input type="hidden" id="PollOptions_0__Title" name="PollOptions[0].Title" value="Option1">
+        </div>
+        <div class="col-md-1">
+            <input value="2" type="radio" id="SelectedOption" name="SelectedOption">
+            <label for="SelectedOption">Area</label>
+            <input type="hidden" data-val="true" data-val-required="The Id field is required." id="PollOptions_1__Id" name="PollOptions[1].Id" value="2">
+            <input type="hidden" id="PollOptions_1__Title" name="PollOptions[1].Title" value="Option2">
+        </div>
+        <div class="col-md-2">
+            <input value="3" type="radio" id="SelectedOption" name="SelectedOption">
+            <label for="SelectedOption">Location</label>
+            <input type="hidden" data-val="true" data-val-required="The Id field is required." id="PollOptions_2__Id" name="PollOptions[2].Id" value="3">
+            <input type="hidden" id="PollOptions_2__Title" name="PollOptions[2].Title" value="Option3">
+        </div>
+    </div>
+    @*<p></p>
+        <div class="row">
+            <strong class="col-md-2">Type Asset Code: </strong>
+            <div class="col">
+                @Html.EditorFor(model => model.AssetCode, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.AssetCode, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
+
+    <p></p>
+    <div class="row">
+        <strong class="col-md-2">Start Date: </strong>
+        <div class="col">
+            @Html.EditorFor(model => model.StartDate, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <p></p>
+    <div class="row">
+        <strong class="col-md-2">Quantity: </strong>
+        <div class="col">
+            @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <p></p>
+    <div class="row">
+        <strong class="col-md-2">Description: </strong>
+        <div class="col">
+            @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", @rows = "5" } })
+            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <button type="submit" class="btn btn-primary active">Next</button>
+            <a href="@Url.Action("Index")" class="btn btn-link">Cancel</a>
+        </div>
+    </div>
+</div>
+}

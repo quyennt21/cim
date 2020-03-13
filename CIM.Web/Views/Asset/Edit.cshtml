@@ -1,0 +1,290 @@
+﻿@model CIM.Web.Models.AssetViewModel
+
+@{
+    ViewBag.Title = "Edit Asset";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("Edit", "Asset", FormMethod.Post, new { @class = "form-horizontal form-label-left", autocomplete = "off" }))
+{
+@Html.AntiForgeryToken()
+
+<div id="formAsset" class="form-horizontal">
+    <h5>Edit Asset: @(Model.Name)</h5>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.ID)
+    @Html.HiddenFor(model => model.ApplicationUserID)
+    @Html.HiddenFor(model => model.AssetTypeID)
+
+    <div class="row form-group">
+        @Html.Label("Asset Type:", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col col-md-10">
+            @Html.EditorFor(model => model.AssetType.Name, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+            @* @Html.DropDownListFor(model => model.AssetTypeID, new SelectList(ViewBag.AssetTypeViewModel, "ID", "Name"), htmlAttributes: new { @class = "form-control dropdown" }) *@
+            @* @Html.ValidationMessageFor(model => model.AssetTypeID, "", new { @class = "text-danger" }) *@
+        </div>
+    </div>
+    <div class="row form-group">
+        @Html.Label("Area:", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col col-md-10">
+            @Html.DropDownListFor(model => model.AreaID, new SelectList(ViewBag.AreaViewModel, "ID", "Name"), htmlAttributes: new { @class = "form-control dropdown" })
+            @Html.ValidationMessageFor(model => model.AreaID, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="row form-group">
+        @Html.Label("Name:", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col col-md-10">
+            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+            <span class="error" id="errorName">The Name field is required</span>
+        </div>
+    </div>
+    <div class="row form-group ">
+        @Html.Label("Asset Code:", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col col-md-10">
+            @Html.EditorFor(model => model.AssetCode, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled"  } })
+            @Html.ValidationMessageFor(model => model.AssetCode, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="row form-group">
+        @Html.Label("Start Date:", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col col-md-10">
+            @Html.EditorFor(model => model.StartDate, new { htmlAttributes = new { @class = "form-control"} })
+            <span class="error" id="errorStartdate">The Start Date field is required</span>
+            @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="row form-group">
+        @Html.Label("Quantity:", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col col-md-10">
+            @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control" } })
+            <span class="error" id="errorQuantity">The Quantity field is required</span>
+            @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div id="attributeList" class="attributeList">
+        @if (ViewBag.AssetAttributeValueViewModel != null)
+            {
+                foreach (var item in ViewBag.AssetAttributeValueViewModel)
+                {
+        <div id="attributeRow" class="row form-group ">
+            <div class="col-md-2">@item.AssetTypeAttribute.Name:</div>
+            <div class="col col-md-10">
+                <input type="search" class="form-control" id="ValueAttribute" placeholder="Enter value attribute..." value="@(item.Value)" name="ValueAttribute">
+                @Html.Hidden("idAtttibuteValue", (object)item.ID)
+                @Html.Hidden("idAttribute", (object)item.AssetAttributeID)
+                @Html.Hidden("idAsset", (object)item.Asset.ID)
+            </div>
+            @* <td class="text-hide">@item.ID</td> *@
+        </div>
+                }
+            }
+    </div>
+
+    <div class="row form-group">
+        @Html.Label("Description:", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", @rows = "5" } })
+            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="row form-group">
+        @Html.Label("In service:", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Active)
+            @Html.ValidationMessageFor(model => model.Active, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input id="btnSubmit" type="button" value="Save" class="btn btn-primary active" />
+            <a href="@Url.Action("Index")" class="btn btn-link">Cancel</a>
+            @* <button type="submit" class="btn btn-primary active">Save</button> *@
+            @* <a href="@Url.Action("Index")" class="btn btn-link">Cancel</a> *@
+        </div>
+    </div>
+</div>
+}
+
+@section scripts
+{
+    <script>
+        function getDataAsset() {
+            var alldata = '';
+            $('#formAsset').each(function() {
+                var name = $(this).find('#Name').val();
+                var ID = $(this).find('#ID').val();
+                var AreaID = $(this).find('#AreaID').val();
+                var AssetCode = $(this).find('#AssetCode').val();
+                var StartDate = $(this).find('#StartDate').val();
+                var Quantity = $(this).find('#Quantity').val();
+                var Description = $(this).find('#Description').val();
+                var Active = $(this).find('#Active').prop('checked');
+                var AssetTypeID = $(this).find('#AssetTypeID').val();
+                var ApplicationUserID = $(this).find('#ApplicationUserID').val();
+                alldata = {
+                    'ID': ID,
+                    'ApplicationUserID': ApplicationUserID,
+                    'AreaID': AreaID,
+                    'AssetCode': AssetCode,
+                    'StartDate': StartDate,
+                    'Quantity': Quantity,
+                    'Description': Description,
+                    'Active':Active,
+                    'Name': name,
+                    'AssetTypeID':AssetTypeID,
+                }
+            });
+            console.log(alldata);
+            return alldata;
+        }
+        function getDataAttribute() {
+            var data = [];
+            $('#attributeList #attributeRow').each(function () {
+                var Value = $(this).find('#ValueAttribute').val();
+                console.log(Value);
+                if (Value === "") {
+                    Value = "N/A";
+                }
+                var ID = $(this).find('#idAtttibuteValue').val();
+                var IdAttribute = $(this).find('#idAttribute').val();
+                var idAsset = $(this).find('#idAsset').val();
+                var alldata = {
+                    'Value': Value,
+                    'AssetAttributeID': IdAttribute,
+                    'AssetID': idAsset,
+                    'ID': ID,
+                    'Active':true,
+                }
+                data.push(alldata);
+            });
+            console.log(data);
+            return data;
+        }
+        function getNameAssetCheck() {
+            var data = [];
+            $('#formAsset').each(function() {
+                data = $(this).find('#Name').val();
+            });
+            if (data !== "") {
+                return data;
+            }
+            return null;
+        }
+        function getQuantityCheck() {
+            var data = [];
+            $('#formAsset').each(function() {
+                data = $(this).find('#Quantity').val();
+            });
+            if (data !== "") {
+                return data;
+            }
+            return null;
+        }
+        function getstartDateCheck() {
+            var data = [];
+            $('#formAsset').each(function() {
+                data = $(this).find('#StartDate').val();
+            });
+            if (data !== "") {
+                return data;
+            }
+            return null;
+        }
+        $('#btnSubmit').click(function () {
+            var valueAttribute = JSON.stringify(getDataAttribute());
+            var assetEdit = JSON.stringify(getDataAsset());
+            var idArea = '@TempData["checkScreenArea"]';
+            var error_free = true;
+            var error_name = $("#errorName");
+            var error_quantity = $("#errorQuantity");
+            var error_startDate = $("#errorStartdate");
+            var name = JSON.stringify(getNameAssetCheck());
+            var startDate = JSON.stringify(getstartDateCheck());
+            var quantity = JSON.stringify(getQuantityCheck());
+            if (startDate === "null") {
+                error_startDate.removeClass("error").addClass("error_show"); error_free = false;
+                error_free = false;
+            } else {
+                error_startDate.removeClass("error_show").addClass("error");
+            }
+            if (quantity === "null") {
+                error_quantity.removeClass("error").addClass("error_show"); error_free = false;
+                error_free = false;
+            }
+            else {
+                console.log(quantity);
+                var check = quantity.indexOf('-');
+                console.log(check);
+                if (check >= 0) {
+                    error_quantity.removeClass("error").addClass("error_show"); error_free = false;
+                    error_quantity.text("Please enter an integer number greater than 0");
+                } else {
+                    error_quantity.removeClass("error_show").addClass("error");        
+                }
+                       
+            }
+            if (name === "null") {
+                error_name.removeClass("error").addClass("error_show"); error_free = false;
+                error_free = false;
+            } else {
+                error_name.removeClass("error_show").addClass("error");
+            }
+            if (error_free) {
+                if (idArea != "") {
+                $.ajax({
+                url: '/Asset/Edit',
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({ 'jsonAssetAttribute': valueAttribute,'asset':assetEdit }),
+                    success: function (error) {
+                        console.log(error+"");
+                     if (error !== "false") {
+                        console.log(error+"");
+                        error_name.removeClass("error").addClass("error_show"); error_free = false;
+                        error_name.text(error);
+                        error_free = false;
+                    } else {   
+                         error_name.removeClass("error_show").addClass("error");
+                         window.location.href = '/Asset/AssetArea/' + idArea;
+                    }
+                        
+                },
+                error: function () {
+                    alert("Error while inserting data");
+                    window.location.href = '@Url.Action("Create", "Asset")';
+                }
+                });
+                } else {
+                    $.ajax({
+                    url: '/Asset/Edit',
+                    type: 'POST',
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify({ 'jsonAssetAttribute': valueAttribute,'asset':assetEdit }),
+                        success: function (error) {
+                        console.log(error+"");
+                        if (error !== "false") {
+                        console.log(error+"");
+                        error_name.removeClass("error").addClass("error_show");
+                        error_name.text(error);
+                        error_free = false;
+                    } else {  
+                         error_name.removeClass("error_show").addClass("error");
+                         window.location.href = '@Url.Action("Index", "Asset")';
+                    }
+                    },
+                    error: function () {
+                        alert("Error while inserting data");
+                        window.location.href = '@Url.Action("Create", "Asset")';
+                    }
+                    });
+                }
+            }
+        });
+    </script>
+}

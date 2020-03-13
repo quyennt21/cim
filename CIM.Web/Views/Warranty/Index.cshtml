@@ -1,0 +1,99 @@
+﻿@model CIM.Web.Infrastructure.PaginationSet<CIM.Web.Models.WarrantyViewModel>
+
+@{
+    ViewBag.Title = "Warranty Management";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+
+}
+
+<div class="page-header">
+    <div class="row">
+        <div class="col-md-4"><h3 class="mb-4">Warranty Management</h3></div>
+    </div>
+
+    @Html.Partial("_Search")
+
+
+</div>
+@if (TempData["AlertMessage"] != null)
+{
+    <div id="AlertWarranty" class="alert @TempData["AlertType"] hide">
+        @TempData["AlertMessage"]
+    </div>
+}
+@if (Model.Count > 0)
+{
+    <table class="table table-responsive-md table-bordered table-hover">
+        <thead class="thead-light">
+            <tr>
+                <th>
+                    @Html.DisplayName("Asset Code")
+                </th>
+                <th>
+                    @Html.DisplayName("Asset Name")
+                </th>
+                <th>
+                    @Html.DisplayName("Date Warranty")
+                </th>
+                <th>
+                    @Html.DisplayName("End Date")
+                </th>
+                <th>
+                    @Html.DisplayName("Reason")
+                </th>
+                <th>
+                    @Html.DisplayName("Result")
+                </th>
+                <th>
+                    @Html.DisplayName("Action")
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Asset.AssetCode)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Asset.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateWarranty)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EndDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Reason)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Result)
+                    </td>
+                    <td>
+                        @*@Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "mr-1" })|*@
+                        @Html.ActionLink("Details", "Details", new { id = item.ID })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="result-search-msg">
+        <p> No Record Found!</p>
+    </div>
+}
+@Html.Partial("_Pagination", Model)
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#AlertWarranty').removeClass('hide');
+            $('#AlertWarranty').delay(3000).slideUp(500);
+        });
+    </script>
+}

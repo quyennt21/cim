@@ -1,0 +1,193 @@
+﻿@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap');
+html {
+    position: relative;
+    min-height: 100%;
+}
+body {
+    background-color: #fff;
+    font-family: 'Segoe UI','Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    padding-bottom: 20px;
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+}
+
+body > .container {
+    padding: 20px 15px 0;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    position: relative;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Common */
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select
+{
+    max-width: 280px;
+}
+
+.action-col {
+    width: 10%;
+}
+/* footer styles
+-------------------------------------------------- */
+.footer {
+    position: absolute;
+    bottom: 0;
+    text-align: center;
+    width: 100%;
+    height: 60px;
+    line-height: 60px;
+    background-color: #f7f7f7;
+}
+
+/*google button*/
+.gg-btn {
+    height: 40px;
+    border-width: 0;
+    background: white;
+    color: #737373;
+    padding: 0 8px;
+    border-radius: 5px;
+    white-space: nowrap;
+    box-shadow: 1px 1px 0px 1px rgba(0,0,0,0.05);
+    transition-property: background-color, box-shadow;
+    transition-duration: 150ms;
+    transition-timing-function: ease-in-out;
+}
+.gg-btn :focus, .gg-btn:hover {
+    box-shadow: 1px 4px 5px 1px rgba(0,0,0,0.1);
+}
+
+.gg-btn:active {
+    background-color: #e5e5e5;
+    box-shadow: none;
+    transition-duration: 10ms;
+}
+
+.gg-icon {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 4px 0 8px 8px;
+    width: 18px;
+    height: 18px;
+    box-sizing: border-box;
+}
+
+
+.gg-text {
+    display: inline-block;
+    vertical-align: middle;
+    padding-left: 24px;
+    padding-right: 24px;
+    font-size: 14px;
+    font-weight: bold;
+    font-family: 'Roboto', sans-serif;
+}
+
+.success {
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    border-radius: 2px;
+    background: #fff;
+    padding: 25px 25px 15px;
+    text-align: center;
+}
+
+.success .animate .icon {
+    animation: fall-in 0.75s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+.success .icon {
+    position: relative;
+    margin: 0 auto;
+    margin-top: -75px;
+    background: #4caf50;
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+    font-family: 'Roboto', sans-serif;
+    color: white;
+}
+
+.success .icon i{
+    font-size: 4em;
+    color: #fff;
+    text-align: center;
+    padding-top: 20px;
+}
+.center {
+    float: none;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@keyframes fall-in {
+    0% {
+        -ms-transform: scale(3, 3);
+        -webkit-transform: scale(3, 3);
+        transform: scale(3, 3);
+        opacity: 0;
+    }
+
+    50% {
+        -ms-transform: scale(1, 1);
+        -webkit-transform: scale(1, 1);
+        transform: scale(1, 1);
+        opacity: 1;
+    }
+
+    60% {
+        -ms-transform: scale(1.1, 1.1);
+        -webkit-transform: scale(1.1, 1.1);
+        transform: scale(1.1, 1.1);
+    }
+
+    100% {
+        -ms-transform: scale(1, 1);
+        -webkit-transform: scale(1, 1);
+        transform: scale(1, 1);
+    }
+}
+
+@keyframes plunge {
+    0% {
+        margin-top: -100%;
+    }
+
+    100% {
+        margin-top: 15%;
+    }
+}
+
+page[size="A4"] {
+    background: white;
+    width: 21cm;
+    height: 29.7cm;
+    display: block;
+    margin: 0;
+}
+
+@media print {
+    body, page[size="A4"] {
+        margin: 0;
+        box-shadow: 0;
+    }
+}
+
+.error {
+    display: none;
+    margin-left: 10px;
+}
+
+.error_show {
+    color: red;
+    margin-left: 10px;
+}

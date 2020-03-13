@@ -1,0 +1,65 @@
+﻿@model CIM.Web.Models.CampusViewModel
+@{
+    ViewBag.Title = "Campus Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="page-header">
+    <h4>Campus ID: @Html.DisplayFor(model => model.ID)</h4>
+</div>
+<hr />
+<div class="item-details">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayName("Campus Name:")
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Name)
+                    </dd>
+                    <dt>
+                        @Html.DisplayName("Address:")
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Address)
+                    </dd>
+                    <dt>
+                        @Html.DisplayName("Telephone:")
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Telephone)
+                    </dd>
+                    <dt>
+                        @Html.DisplayName("In Service:")
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Active)
+                    </dd>
+                </dl>
+            </div>
+            <div class="col">
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayName("Created At:")
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.CreatedAt)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayName("Updated At:")
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.UpdatedAt)
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-md-offset-3 col-md-10">
+    <a class="btn btn-primary btn-edit" href="@Url.Action("Edit", new { id = Model.ID } )">Edit</a>
+    <a class="btn btn-link btn-back" href="@Url.Action("Index")">Back</a>
+</div>

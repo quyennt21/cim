@@ -1,0 +1,67 @@
+﻿@model CIM.Web.Models.MailConfigViewModel
+
+@{
+    ViewBag.Title = "Sender EMail Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<dl class="dl-horizontal">
+    <h4>Details Mail config</h4>
+    <hr />
+    <div class="row">
+        <strong class="col-md-2 ">Mail Address:</strong>
+        <div class="col">@Html.DisplayFor(model => model.EmailAddress)</div>
+    </div>
+
+    <p></p>
+    <div class="row">
+        <strong class="col-md-2">Port: </strong>
+        <div class="col">@Html.DisplayFor(model => model.Port)</div>
+    </div>
+
+    <p></p>
+    <div class="row">
+        <strong class="col-md-2">EnabledSSL: </strong>
+        <div class="col">@Html.DisplayFor(model => model.EnabledSSL)</div>
+    </div>
+
+    <p></p>
+    <div class="row">
+        <strong class="col-md-2">Host: </strong>
+        <div class="col">@Html.DisplayFor(model => model.Host)</div>
+    </div>
+
+    <p></p>
+    <div class="row">
+        <strong class="col-md-2">Count: </strong>
+        <div class="col">@Html.DisplayFor(model => model.Count)</div>
+    </div>
+
+    <p></p>
+    <div class="row">
+        <strong class="col-md-2">Date send: </strong>
+        <div class="col">@Html.DisplayFor(model => model.DateSend)</div>
+    </div>
+
+    <p></p>
+    <div class="row">
+        <strong class="col-md-2">Update At: </strong>
+        <div class="col">@Html.DisplayFor(model => model.UpdatedAt)</div>
+    </div>
+
+    <p></p>
+    <div class="row">
+        <strong class="col-md-2">Create At: </strong>
+        <div class="col">@Html.DisplayFor(model => model.CreatedAt)</div>
+    </div>
+
+    <p></p>
+    <div class="row">
+        <strong class="col-md-2">Active: </strong>
+        <div class="col">@Html.DisplayFor(model => model.Active)</div>
+    </div>
+</dl>
+<div class="">
+    <a class="btn btn-primary btn-edit" href="@Url.Action("Edit", new { id = Model.ID } )">Edit</a>
+    <a class="btn btn-link btn-back" href="@Url.Action("Index")">Back</a>
+</div>

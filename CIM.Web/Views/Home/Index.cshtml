@@ -1,0 +1,64 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row justify-content-md-center">
+    <div class="col-sm-6 col-lg-5 mb-2">
+        <h5 class="text-body">Campus/Location/Area</h5>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item list-group-item-action border-0 py-2"><a class="text-decoration-none" href="/campus">Campus Management</a></li>
+            <li class="list-group-item list-group-item-action border-0 py-2"><a class="text-decoration-none" href="/Location">Location Management</a></li>
+            <li class="list-group-item list-group-item-action border-0 py-2"><a class="text-decoration-none" href="/Area">Area Management</a></li>
+        </ul>
+    </div>
+    <div class="col-sm-6 col-lg-5 mb-2">
+        <h5>Reports</h5>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item list-group-item-action border-0 py-2"><a class="text-decoration-none" href="/Report">Report Management</a></li>
+            <li class="list-group-item list-group-item-action border-0 py-2"><a class="text-decoration-none" href="/MaintenanceDiary">Maintenance Diary Management</a></li>
+            <li class="list-group-item list-group-item-action border-0 py-2"><a class="text-decoration-none" href="/Warranty">Warranty Management</a></li>
+            <li class="list-group-item list-group-item-action border-0 py-2"><a class="text-decoration-none" href="/AssetLog">Asset Log</a></li>
+        </ul>
+    </div>
+    <div class="w-100"></div>
+    <div class="col-sm-6 col-lg-5 mb-2">
+        <h5>Asset Management</h5>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item list-group-item-action border-0 py-2"><a class="text-decoration-none" href="/Asset">Asset Management</a></li>
+            <li class="list-group-item list-group-item-action border-0 py-2"><a class="text-decoration-none" href="/AssetTypes">Asset type Management</a></li>
+        </ul>
+    </div>
+
+    <div class="col-sm-6 col-lg-5 mb-2">
+        <h5>User Management</h5>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item list-group-item-action border-0 py-2"><a class="text-decoration-none" href="/user">User Management</a></li>
+            <li class="list-group-item list-group-item-action border-0 py-2"><a class="text-decoration-none" href="/PIC">People in Charge Management</a></li>
+        </ul>
+    </div>
+    <div class="w-100"></div>
+    <div class="col-sm-6 col-lg-5 mb-2">
+        <h5>Generate and print QR Code</h5>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item list-group-item-action border-0 py-2"><a href="/qr">Generate and print QR Code </a></li>
+        </ul>
+    </div>
+    <div class="col-sm-6 col-lg-5 mb-2">
+        <h5>System Configuration</h5>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item list-group-item-action border-0 py-2"><a class="text-decoration-none" href="/MailConfigs">CIM Sender Emails</a></li>
+        </ul>
+    </div>
+    <div class="w-100"></div>
+    <div class="col-sm-6 col-lg-5 mb-2">
+        <h5>Import Excel</h5>
+        <ul class="list-group">
+            <li class="list-group-item list-group-item-action border-0 py-2"><a class="text-decoration-none" href="/Excel/ImportLocation">Import Location</a></li>
+            <li class="list-group-item list-group-item-action border-0 py-2"><a class="text-decoration-none" href="/Excel/ImportArea">Import Area</a></li>
+            <li class="list-group-item list-group-item-action border-0 py-2"><a class="text-decoration-none" href="/Excel/ImportAsset">Import Asset</a></li>
+        </ul>
+    </div>
+    <div class="col-sm-6 col-lg-5">
+    </div>
+</div>

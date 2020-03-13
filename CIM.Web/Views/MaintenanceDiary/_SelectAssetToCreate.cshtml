@@ -1,0 +1,60 @@
+﻿@using (Html.BeginForm("CreateAll", "MaintenanceDiary", FormMethod.Post, new { @class = "form-horizontal form-label-left", autocomplete = "off" }))
+{
+@Html.AntiForgeryToken()
+    if (ViewBag.assetsViewModel.Count > 0)
+    {
+<div class="form-horizontal">
+    <h4>Select Asset:</h4>
+    <hr />
+
+    <table class="table table-bordered table-hover">
+        <thead class="thead-light">
+            <tr>
+                <th>
+                    @Html.DisplayName("Asset Code")
+                </th>
+                <th>
+                    @Html.DisplayName("Asset Name")
+                </th>
+                <th>
+                    @Html.DisplayName("Area Name")
+                </th>
+                <th>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ViewBag.assetsViewModel)
+                {
+            <tr>
+                <td>
+                    @item.AssetCode
+                </td>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    @item.Area.Name
+                </td>
+                <td>
+                    <div class="form-group">
+                        <input type="checkbox" name="assetCheckedList" value="@item.ID" />
+                    </div>
+                </td>
+            </tr>
+                }
+        </tbody>
+    </table>
+    <div class="form-group">
+        <input type="hidden" name="dateMaintenance" value="" />
+        <input type="hidden" name="returnUrl" value="@Url.Action("Details", "Asset", new { id = ViewBag.assetId})" />
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Next" class="btn btn-primary" />
+            <a href="@Url.Action("Details", "Asset", new { id = ViewBag.assetId})" class="btn btn-link">Cancel</a>
+        </div>
+    </div>
+</div>
+    }
+}

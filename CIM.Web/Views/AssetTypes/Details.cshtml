@@ -1,0 +1,50 @@
+﻿@model CIM.Web.Models.AssetTypeViewModel
+@{
+    ViewBag.Title = "Asset Type Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<dl class="dl-horizontal">
+    <h4>Asset Type: @Html.DisplayFor(model => model.ID)</h4>
+    <hr />
+    <div class="row">
+        <strong class="col-md-2 ">Name:</strong>
+        <div class="col">@Html.DisplayFor(model => model.Name)</div>
+    </div>
+
+    <p></p>
+    <div class="row">
+        <strong class="col-md-2">Create At: </strong>
+        <div class="col">@Html.DisplayFor(model => model.CreatedAt)</div>
+    </div>
+
+    <p></p>
+    <div class="row">
+        <strong class="col-md-2">Update At: </strong>
+        <div class="col">@Html.DisplayFor(model => model.UpdatedAt)</div>
+    </div>
+
+    @if (ViewBag.AssetAttribute != null)
+    {
+    <p></p>
+    <div class="row">
+        <strong class="col-md-2">Asset Attribute: </strong>
+        <div class="col-md-10">
+            @foreach (var item in ViewBag.AssetAttribute)
+                {
+            @item.Name
+            <br />
+                }
+        </div>
+    </div>
+    }
+</dl>
+<div class="button-group mt-5">
+    <div class="row">
+        <div class="col-6">
+            <a role="button" class="btn btn-primary mr-2" href='@Url.Action("Edit", "AssetTypes",new {id = Model.ID})'>Edit</a>
+            @*<a role="button" class="btn btn-primary mr-2" href='@Url.Action("Delete", "AssetTypes",new {id = Model.ID})'>Delete</a>*@
+            @Html.ActionLink("Back", "Index")
+        </div>
+    </div>
+</div>

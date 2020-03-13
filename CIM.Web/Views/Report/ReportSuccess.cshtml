@@ -1,0 +1,17 @@
+﻿@{
+    ViewBag.Title = "Report Success";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row mt-5">
+    <div class="col-sm-8 col-md-6 col-lg-5 success center animate">
+        <div class="icon">
+            <i class="fa fa-check fa-5x"></i>
+        </div>
+        <h2 class="mt-3">Success!</h2>
+        <p>
+            Thank you for report. Your report has been received.
+        </p>
+        <a href="@Url.Action("Index", "Myreport")">Go to My Report</a>
+    </div>
+</div>

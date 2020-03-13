@@ -1,0 +1,26 @@
+﻿@{
+    var locationList = new SelectList(ViewBag.locationViewModel, "ID", "Name").ToList();
+    locationList.Insert(0, (new SelectListItem { Text = "--All--", Value = "0"}));
+}
+
+@using (Html.BeginForm("Search", "Area", FormMethod.Get, new { @class = "form-inline form-label-left mb-4 ", autocomplete = "off" }))
+{
+<div class="form-group mr-4">
+    <label class="mr-3" for="locationId">Location: </label>
+    @Html.DropDownList("locationId", locationList, htmlAttributes: new { @class = "form-control" })
+</div>
+
+<div class="form-group mr-4">
+    <label class="mr-3" for="area">Area: </label>
+    <input type="search" class="form-control" id="area" placeholder="Enter code or name..." value="@(ViewBag.areaSearch)" name="areaSearch">
+</div>
+
+<div class="form-group">
+    <!-- Submit button -->
+    <button class="btn btn-primary" type="submit">Search</button>
+</div>
+<div class="form-group">
+    <!-- Create button -->
+    <a href="@Url.Action("Create")" class="btn btn-primary ml-2">Create</a>
+</div>
+}

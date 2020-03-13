@@ -1,0 +1,39 @@
+﻿@{
+    var roleList = new SelectList(ViewBag.roleViewModel, "Name", "Name").ToList();
+    roleList.Insert(0, (new SelectListItem { Text = "All", Value = "All" }));
+
+    List<SelectListItem> statusList = new List<SelectListItem>() {
+        new SelectListItem { Text = "--All--", Value = "2" },
+        new SelectListItem { Text = "Active", Value = "1" },
+        new SelectListItem { Text = "In-Active", Value = "0" },
+    };
+
+}
+
+@using (Html.BeginForm("Search", "user", FormMethod.Get, new { @class = "form-inline form-label-left mb-4 ", autocomplete = "off" }))
+{
+<div class="form-group mr-4">
+    <label class="mr-3" for="status">Status: </label>
+    @Html.DropDownList("status", statusList, htmlAttributes: new { @class = "form-control" })
+</div>
+
+<div class="form-group mr-4">
+    <label class="mr-3" for="roleName">Role: </label>
+    @Html.DropDownList("roleName", roleList, htmlAttributes: new { @class = "form-control" })
+</div>
+
+<div class="form-group mr-4">
+    <label class="mr-3" for="userName">User: </label>
+    <input type="search" class="form-control" id="userName" placeholder="Enter username..." value="@(ViewBag.userName)" name="userName">
+</div>
+
+<div class="form-group">
+    <!-- Submit button -->
+    <button class="btn btn-primary" type="submit">Search</button>
+</div>
+
+<div class="form-group">
+    <!-- Create button -->
+    <a href="@Url.Action("Create")" class="btn btn-primary ml-2">Create</a>
+</div>
+}

@@ -1,0 +1,82 @@
+﻿@model CIM.Web.Infrastructure.PaginationSet<CIM.Web.Models.UserViewModel>
+
+@{
+    ViewBag.Title = "User Management";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="page-header">
+    <div class="row">
+        <div class="col-md-4"><h3 class="mb-4">User Management</h3></div>
+    </div>
+    @Html.Partial("_Search")
+</div>
+@if (TempData["AlertMessage"] != null)
+{
+    <div id="AlertUser" class="alert @TempData["AlertType"] hide">
+        @TempData["AlertMessage"]
+    </div>
+}
+@if (Model.Count > 0)
+{
+    <table class="table table-responsive-md table-bordered table-hover">
+        <thead class="thead-light">
+            <tr>
+                <th>
+                    @Html.DisplayName("UserName")
+                </th>
+                <th>
+                    @Html.DisplayName("Email")
+                </th>
+                <th>
+                    @Html.DisplayName("Full Name")
+                </th>
+                <th>
+                    @Html.DisplayName("Role")
+                </th>
+                <th>
+                    @Html.DisplayName("Active")
+                </th>
+                <th>
+                    @Html.DisplayName("Action")
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FullName)
+                    </td>
+                    <td>@Html.DisplayFor(modelItem => item.Role.Name)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Active)</td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "mr-1" })|
+                        @Html.ActionLink("Details", "Details", new { id = item.Id })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="result-search-msg">
+        <p>No results found</p>
+    </div>
+}
+@Html.Partial("_Pagination", Model)
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#AlertUser').removeClass('hide');
+            $('#AlertUser').delay(3000).slideUp(500);
+        });
+    </script>
+}

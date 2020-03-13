@@ -1,0 +1,114 @@
+﻿@model IEnumerable<CIM.Web.Models.AssetViewModel>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@if (ViewBag.isCreateSuccess)
+{
+    ViewBag.Title = "Report Success";
+    @Html.Partial("_ReportSuccess")
+}
+else
+{
+    ViewBag.Title = "Create Report";
+    var listStatus = new SelectList(ViewBag.listStatus, "Value", "Text").ToList();
+
+    <div class="page-header">
+        <div class="row">
+            <div class="col-md-4"><h4 class="mb-4">Create Report</h4></div>
+        </div>
+    </div>
+
+    using (Html.BeginForm("ListReport", "Report", FormMethod.Post, new { @class = "form-horizontal form-label-left mb-4 ", autocomplete = "off", enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-group">
+            <table class="table table-bordered table-hover">
+                <thead class="thead-light">
+                    <tr>
+                        <th>
+                            @Html.DisplayName("Asset Name")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Description")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Status")
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                @foreach (var item in Model.ToList())
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+                            @{
+                                var listID = ViewBag.listAssetID;
+                            }
+                            @foreach (var id in listID)
+                            {
+                                if (id == item.ID)
+                                {
+                                    <div class="text-secondary">Đã report</div>
+                                }
+                            }
+                        </td>
+                        <td>
+                            @{
+                                var listIDReport = ViewBag.listIDReport;
+                            }
+                            @foreach (var id in listIDReport)
+                            {
+                                if (id == item.ID)
+                                {
+                                    <input id="@item.ID" type="checkbox" name="skill" value="@item.ID" />
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2" for="picture">Picture:  </label>
+            <div class="col-md-5">
+                <input type="file" class="form-control-file" name="file" value="Browse" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2" for="comment">Comment:  </label>
+            <div class="col-md-6">
+                <textarea class="form-control" name="Comment" id="Comment" rows="4"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-5">
+                <button class="btn btn-primary" type="submit">Create</button>
+            </div>
+        </div>
+    }
+    <script>
+        function updatemark(arg) {
+            var abc = "";
+            //Iterating the collection of checkboxes which checked marked
+            $('input[type=checkbox]').each(function () {
+                if (this.checked) {
+                    abc = abc + $(this).val() + ",";
+                    //assign set value to hidden field
+                    //$('#SkillID').val(abc);
+                }
+                if (abc == "") {
+
+                }
+            });
+        }
+    </script>
+}

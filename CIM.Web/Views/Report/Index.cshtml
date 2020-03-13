@@ -1,0 +1,268 @@
+﻿@model CIM.Web.Infrastructure.PaginationSet<CIM.Web.Models.ReportViewModel>
+
+@{
+    ViewBag.Title = "Report Management";
+    var listStatus = new SelectList(ViewBag.listStatus, "Value", "Text").ToList();
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-header">
+    <div class="row">
+        <div class="col-md-4"><h3 class="mb-4">Report Management</h3></div>
+    </div>
+    @using (Html.BeginForm("Index", "Report", FormMethod.Get, new { @class = "form-inline form-label-left mb-4 ", autocomplete = "off" }))
+    {
+        <div class="form-group mr-4">
+            <label class="mr-3" for="statusSearch">Status: </label>
+            @Html.DropDownList("statusSearch", listStatus, htmlAttributes: new { @class = "form-control" })
+        </div>
+
+        <div class="form-group mr-4">
+            <label class="mr-3" for="area">Asset Name: </label>
+            <input type="search" class="form-control" id="area" placeholder="Enter Asset name..." value="@(ViewBag.searchString)" name="searchString">
+        </div>
+
+        <div class="form-group">
+            <button class="btn btn-primary" type="submit">Search</button>
+        </div>
+    }
+</div>
+@if (TempData["AlertMessage"] != null)
+{
+    <div id="AlertReport" class="alert @TempData["AlertType"] hide">
+        @TempData["AlertMessage"]
+    </div>
+}
+@using (Html.BeginForm("EditSelect", "Report", FormMethod.Get, new { @id = "form-edit" }))
+{
+    <!-- Submit button -->
+    <button class="btn btn-link edit-select-btn" name="selectListItem">Forward Select</button>
+}
+<table class="table table-responsive-md table-bordered table-hover">
+    <thead class="thead-light">
+        <tr>
+            <th>
+                @Html.DisplayName("Location")
+            </th>
+            <th>
+                @Html.DisplayName("Area")
+            </th>
+            <th>
+                @Html.DisplayName("Asset Name")
+            </th>
+            <th>
+                @Html.DisplayName("Status")
+            </th>
+            <th>
+                @Html.DisplayName("Report At")
+            </th>
+            <th>
+                @Html.DisplayName("User Report")
+            </th>
+            <th>
+                @Html.DisplayName("Comment")
+            </th>
+            <th>
+                @Html.DisplayName("PIC")
+            </th>
+            @if (ViewBag.statusSearch == 3)
+            {
+                <th>
+                    @Html.DisplayName("Feedback")
+                </th>
+            }
+            <th>
+                <input type="checkbox" id="checkall" />
+            </th>
+            <th>
+                @Html.DisplayName("Action")
+            </th>
+        </tr>
+    </thead>
+
+    @foreach (var item in Model.Items)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Asset.Area.Location.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Asset.Area.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Asset.Name)
+            </td>
+            <td>
+                @{
+                    var status = @Html.DisplayFor(modelItem => item.status).ToString();
+                }
+                @if (status.Equals("1"))
+                {
+                    <div class="text-muted font-weight-bold">
+                        OPENING
+                    </div>
+                }
+                else if (status.Equals("2"))
+                {
+                    <div class="text-primary font-weight-bold">
+                        PROCESSING
+                    </div>
+                }
+                else if (status.Equals("3"))
+                {
+                    <div class="text-success font-weight-bold">
+                        DONE
+                    </div>
+                }
+                else if (status.Equals("4"))
+                {
+                    <div class="text-warning font-weight-bold">
+                        UPWORK
+                    </div>
+                }
+                else
+                {
+                    <div class="text-danger font-weight-bold">
+                        CANCEL
+                    </div>
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReportAt)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.UserReport)
+            </td>
+            <td class="text-break text-wrap">
+                @Html.DisplayFor(modelItem => item.Comment)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RequestManager)
+            </td>
+            @if (ViewBag.statusSearch == 3)
+            {
+                <td>
+                    @if (item.Rate != null)
+                    {
+                        <div class="rateit" data-rateit-value="@(item.Rate.Value)" data-rateit-ispreset="true" data-rateit-readonly="true"></div>
+                        if (!string.IsNullOrEmpty(item.Rate.Comment))
+                        {
+                            <span>/</span>@(item.Rate.Comment)
+                        }
+
+                    }
+                </td>
+            }
+            <td>
+                <div id="checkboxes">
+                    <input type="checkbox" name="assetCheckedList" id="report-@item.ID" class="select-report" value="@item.ID" />
+                </div>
+            </td>
+            <td>
+                @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+                @Html.ActionLink("Forward", "EditSelect", new { selectListItem = item.ID })
+            </td>
+        </tr>
+    }
+</table>    
+<input type="hidden" id="referrer-uri" value="@((Request.UrlReferrer == null) ? "/report" : Request.UrlReferrer.LocalPath.ToString())" />
+@Html.Partial("_Pagination", Model)
+
+@section Scripts {
+    @Scripts.Render("~/bundles/rateit")
+
+    <script type="text/javascript">
+
+        var selectedArr = loadSelected();
+
+        $(document).ready(function () {
+            $('#AlertReport').removeClass('hide');
+            $('#AlertReport').delay(3000).slideUp(500);
+            hideEditForm(selectedArr)
+            var isReferrer = $("#referrer-uri").val();
+            if (isReferrer.toLowerCase() !== '/report') {
+                sessionStorage.clear();
+                selectedArr = [];
+                hideEditForm(selectedArr);
+            };
+            $("#checkall").prop('checked', false);
+
+            //set state checkbox
+            selectedArr.forEach(function (id) {
+                $('#report-' + id).prop('checked', true);
+            });
+
+            $("#checkall").click(function () {
+                var status = $("#checkall").prop('checked');
+                toggleChecked(status);
+                if (status) {
+                    $.each($('.select-report'), function () {
+                        var found = $.inArray($(this).val(), selectedArr);
+                        if (found === -1) {
+                            selectedArr.push($(this).val());
+                        }
+                    });
+                    push(selectedArr);
+                } else {
+                    $.each($('.select-report'), function () {
+                        var val = $(this).val();
+                        selectedArr.forEach(function (i, item) {
+                            if (i === val) {
+                                selectedArr.splice(item, 1);
+                            }
+                        });
+                    });
+                    push(selectedArr);
+                }
+                hideEditForm(selectedArr)
+            });
+
+            $('.select-report').on('change', function () {
+                var val = $(this).val();
+                var state = $(this).is(':checked');
+                if (state) {
+                    var found = $.inArray(val, selectedArr);
+                    if (found == -1) {
+                        selectedArr.push(val);
+                    }
+                } else {
+                    selectedArr.forEach(function (i, item) {
+                        if (i === val) {
+                            selectedArr.splice(item, 1);
+                        }
+                    });
+                }
+                push(selectedArr);
+                hideEditForm(selectedArr)
+            });
+
+            $('.edit-select-btn').on('click', function () {
+                $(this).val(selectedArr);
+                sessionStorage.clear();
+                $('#form-edit').submit();
+            });
+        });
+
+        function hideEditForm(arr) {
+            if (arr.length) {
+                $('.edit-select-btn').show();
+            } else {
+                $('.edit-select-btn').hide();
+            }
+        }
+        function toggleChecked(status) {
+            $("#checkboxes input").each(function () {
+                $(this).prop("checked", status);
+            });
+        };
+
+        function loadSelected() {
+            return JSON.parse(sessionStorage.getItem('reportSelected')) || []
+        };
+
+        function push(arr) {
+            sessionStorage.setItem('reportSelected', JSON.stringify(arr));
+        };
+    </script>
+}

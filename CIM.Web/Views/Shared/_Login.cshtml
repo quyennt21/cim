@@ -1,0 +1,16 @@
+﻿@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("LogOut", "Account", FormMethod.Post, new { id = "logoutForm", @class = "" }))
+    {
+@Html.AntiForgeryToken()
+<ul class="navbar-nav navbar-right">
+    <li class="nav-item">
+        <a class="nav-link active" title="user" href="/myreport">Xin chào @User.Identity.GetUserName()!</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" href="javascript:document.getElementById('logoutForm').submit()">Đăng xuất</a>
+    </li>
+</ul>
+    }
+}

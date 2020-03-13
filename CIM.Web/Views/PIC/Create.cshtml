@@ -1,0 +1,63 @@
+﻿@model CIM.Web.Models.PICViewModel
+@{
+    ViewBag.Title = "Create PIC";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var locationList = new SelectList(ViewBag.locationViewModel, "ID", "Name").ToList();
+    var assetTypeList =new SelectList(ViewBag.assetTypeViewModel, "ID", "Name").ToList();
+    var userList = new SelectList(ViewBag.userViewModel, "ID", "UserName").ToList();
+}
+
+@using (Html.BeginForm("Create", "PIC", FormMethod.Post, new { @class = "form-horizontal form-label-left", autocomplete = "off" }))
+{
+@Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <h4>Create PIC</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="form-group">
+        <label class="control-label col-md-2" for="location">Location:</label>
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.Area.Location.ID, locationList, htmlAttributes: new { @class = "form-control dropdown" })
+            @Html.ValidationMessageFor(model => model.Area.Location.ID, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-2" for="assetType">Asset Type:</label>
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.AssetType.ID, assetTypeList, htmlAttributes: new { @class = "form-control dropdown" })
+            @Html.ValidationMessageFor(model => model.AssetType.ID, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-2" for="assetType">User:</label>
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.ApplicationUser.Id, userList, htmlAttributes: new { @class = "form-control dropdown" })
+            @Html.ValidationMessageFor(model => model.ApplicationUser.Id, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-md-2" for="assetType">Start Date:</label>
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.StartDate, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-2" for="assetType">End Date:</label>
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Create" class="btn btn-primary" />
+            <a href="@Url.Action("Index")" class="btn btn-link">Cancel</a>
+        </div>
+    </div>
+</div>
+}

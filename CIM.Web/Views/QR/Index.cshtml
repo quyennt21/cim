@@ -1,0 +1,170 @@
+﻿@model CIM.Model.Models.QrAssetViewModel
+@{
+    ViewBag.Title = "Generate and print QR Code";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+    <div class="page-header">
+        <div class="row">
+            <div class="col-md-5"><h3 class="mb-4">Generate and print QR Code</h3></div>
+        </div>
+
+
+        @using (Html.BeginForm("Search", "QR", FormMethod.Get, new { @class = "form-inline form-label-left mb-4 ", autocomplete = "off" }))
+        {
+            <div class="form-group mr-4">
+                <label class="mr-3" for="asset">Location: </label>
+                @Html.DropDownList("locationSearch", (IEnumerable<SelectListItem>)ViewBag.locationSearch, new { @class = "form-control" })
+            </div>
+            <div class="form-group mr-4">
+                <label class="mr-3" for="asset">Type: </label>
+                @Html.DropDownList("typeSearch", (IEnumerable<SelectListItem>)ViewBag.listTypeSearch, new { @class = " form-control" })
+            </div>
+            <div class="form-group mr-4">
+                <label class="mr-3" for="asset">Keyword: </label>
+                @Html.TextBox("SearchString", null, new { @class = " form-control" })
+            </div>
+            @*<div class="form-group mr-4">
+                <label class="mr-3" for="asset">From:  </label>
+                @Html.TextBox("dateFrom", String.Format("{0:d}", Model.ToString()), new { @class = "form-control", type = "date" })
+            </div>
+            <div class="form-group mr-4">
+                <label class="mr-3" for="asset"> To: </label>
+                @Html.TextBox("dateTo", String.Format("{0:d}", Model.ToString()), new { @class = "form-control ", type = "date" })
+            </div>*@
+
+            <div class="form-group">
+                <input type="submit" id="search" class="btn btn-primary form-control" value="Search" />
+            </div>
+
+        }
+    </div>
+
+<div>
+    @using (Html.BeginForm("printqr", "qr", FormMethod.Post))
+    {
+
+        <table class="table table-responsive-md table-bordered table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th>
+                        Area
+                    </th>
+                    <th>
+                        Asset Code
+                    </th>
+                    <th>
+                        Asset Name
+                    </th>
+                    <th>
+                        Asset Type
+                    </th>
+                    <th>
+                        Generate QR
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @for (int i = 0; i < Model.lstQr.Count(); i++)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => Model.lstQr[i].asset.Area.Name)
+                            @Html.HiddenFor(modelItem => Model.lstQr[i].asset.Area.Location.Name)
+
+                            @Html.HiddenFor(modelItem => Model.lstQr[i].asset.Area.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => Model.lstQr[i].asset.AssetCode)
+                            @Html.HiddenFor(modelItem => Model.lstQr[i].asset.AssetCode)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => Model.lstQr[i].asset.Name)
+                            @Html.HiddenFor(modelItem => Model.lstQr[i].asset.Name)
+                            @Html.HiddenFor(modelItem => Model.lstQr[i].asset.ID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => Model.lstQr[i].asset.AssetType.Name)
+                            @Html.HiddenFor(modelItem => Model.lstQr[i].asset.AssetTypeID)
+                            @Html.HiddenFor(modelItem => Model.lstQr[i].asset.ApplicationUser.UserName)
+                        </td>
+                        <td>
+                            @Html.HiddenFor(modelItem => Model.lstQr[i].asset.Quantity)
+                            @Html.HiddenFor(modelItem => Model.lstQr[i].asset.StartDate)
+                            @Html.CheckBoxFor(modelItem => Model.lstQr[i].isChecked)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        if (Model.lstQr.Count() <= 0)
+        {
+            <div class="result-search-msg">
+                <p>No results found</p>
+            </div>
+        }
+        <a class="btn btn-primary mr-2" href="@Url.Action("Printqr", new { status = "all" })">Generate all QR Code</a>
+        <button type="submit" class="btn btn-primary">Generate selected QR Code </button>
+    }
+
+    @if (ViewBag.totalPage > 1)
+    {
+        var current = Request.QueryString["page"];
+        var total = ViewBag.totalPage;
+        var searchString = ViewBag.searchString;
+        var typeSearch = ViewBag.searchType;
+        var dateFrom = ViewBag.dateFrom;
+        var dateTo = ViewBag.dateTo;
+        var locationSearch = ViewBag.stringlocationsearch;
+        if (current == null)
+        {
+            current = "1";
+        }
+        int page = Int32.Parse(current);
+
+        <nav class="mt-5">
+            <ul class="pagination justify-content-center">
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Search", new { page = 1 ,searchString = searchString ,typeSearch =typeSearch,dateFrom = dateFrom, dateTo=dateTo ,locationSearch=locationSearch})">First</a>
+                </li>
+                @if (page > 1)
+                {
+                    <li class="page-item">
+
+                        <a class="page-link" href="@Url.Action("Search", new { page = page-1,searchString = searchString ,typeSearch =typeSearch,dateFrom = dateFrom, dateTo=dateTo,locationSearch=locationSearch })">Previous</a>
+                    </li>
+                }
+
+                @if (ViewBag.totalPage > 6)
+                {
+                    total = page + 5;
+
+                    if (page >= (ViewBag.totalPage - 5))
+                    {
+                        total = ViewBag.totalPage;
+                    }
+
+                }
+
+                @for (int i = page; i <= total; i++)
+                {
+
+                    <li class="page-item @(page == i ? "disabled" : "")">
+                        <a class="page-link" href="@Url.Action("Search", new { page=i,searchString = searchString ,typeSearch =typeSearch,dateFrom = dateFrom, dateTo=dateTo,locationSearch=locationSearch })">@i</a>
+                    </li>
+                }
+
+                @if (page < ViewBag.totalPage)
+                {
+
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("Search", new { page = page+1,searchString = searchString ,typeSearch =typeSearch,dateFrom = dateFrom, dateTo=dateTo,locationSearch=locationSearch })">Next</a>
+                    </li>
+                }
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Search", new { page = ViewBag.totalPage,searchString = searchString ,typeSearch =typeSearch,dateFrom = dateFrom, dateTo=dateTo,locationSearch=locationSearch })">Last</a>
+                </li>
+            </ul>
+        </nav>
+    }
+</div>

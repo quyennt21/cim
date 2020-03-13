@@ -1,0 +1,46 @@
+﻿@model CIM.Web.Models.ReportViewModel
+
+@{
+    ViewBag.Title = "Create Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (ViewBag.isCreateSuccess)
+{
+    ViewBag.Title = "Report Success";
+    @Html.Partial("_ReportSuccess")
+}
+else
+{
+    using (Html.BeginForm("Create", "Report", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <h4>Create Report</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <input type="hidden" value="@TempData["assetID"]" name="assetID" />
+            <div class="form-group">
+                <label class="control-label col-md-2" for="picture">Picture:  </label>
+                <div class="col-md-5">
+                    <input type="file" class="form-control-file" name="file" value="Browse" accept="image/*" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2" for="comment">Comment:  </label>
+                <div class="col-md-6">
+                    @Html.EditorFor(model => model.Comment, new { htmlAttributes = new { @class = "form-control", rows = "4" } })
+                    @Html.ValidationMessageFor(model => model.Comment, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </div>
+        </div>
+    }
+}

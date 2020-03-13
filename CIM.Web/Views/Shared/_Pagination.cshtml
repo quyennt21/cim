@@ -1,0 +1,46 @@
+﻿<!-- pagination -->
+@if (Model.TotalPages > 1)
+{
+    var startPageIndex = Math.Max(1, Model.Page - Model.MaxPage / 2);
+    var endPageIndex = Math.Min(Model.TotalPages, Model.Page + Model.MaxPage / 2);
+    var action = HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString();
+    var query = new RouteValueDictionary(ViewBag.query);
+
+<nav class="mt-5">
+    <ul class="pagination justify-content-center">
+        @if (Model.Page > 1)
+                {
+                query["page"] = 1;
+        <li class="page-item">
+            <a class="page-link" href="@Url.Action(action, query)" aria-label="First">First</a>
+        </li>
+                query["page"] = Model.Page - 1;
+        <li class="page-item">
+            <a class="page-link" href="@Url.Action(action, query)" aria-label="Previous">Previous</a>
+        </li>
+            }
+        @for (int i = startPageIndex; i <= endPageIndex; i++)
+            {
+                query["page"] = i;
+        <li class="page-item @(Model.Page == i ? "disabled" : "")">
+            <a class="page-link" href="@Url.Action(action, query)" title="page @i">@i</a>
+        </li>
+            }
+        @if (Model.Page < Model.TotalPages)
+            {
+                query["page"] = Model.Page + 1;
+        <li class="page-item">
+
+            <a class="page-link" href="@Url.Action(action, query)" aria-label="Next">Next</a>
+        </li>
+
+                query["page"] = Model.TotalPages;
+        <li class="page-item">
+
+            <a class="page-link" href="@Url.Action(action, query)" aria-label="Last">Last</a>
+        </li>
+            }
+    </ul>
+</nav>
+
+}

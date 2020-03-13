@@ -1,0 +1,88 @@
+﻿@model CIM.Model.Models.MailConfig
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>MailConfig</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.EmailAddress)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EmailAddress)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Port)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Port)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Host)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Host)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EnabledSSL)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EnabledSSL)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TemplateID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TemplateID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedAt)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreatedAt)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UpdatedAt)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UpdatedAt)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Active)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Active)
+        </dd>
+    </dl>
+
+    @using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+
+    <div class="form-actions no-color">
+        <input type="submit" value="Delete" class="btn btn-primary" /> |
+        @Html.ActionLink("Back to List", "Index")
+    </div>
+    }
+</div>

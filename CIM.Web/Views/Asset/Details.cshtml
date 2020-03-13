@@ -1,0 +1,173 @@
+﻿@model CIM.Web.Models.AssetViewModel
+@{
+    ViewBag.Title = "Asset Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<dl class="dl-horizontal">
+    <h4>Asset ID: @Html.DisplayFor(model => model.ID)</h4>
+    <hr />
+    <div class="row">
+        <strong class="col-md-2 ">Area:</strong>
+        <div class="col">@Html.DisplayFor(model => model.Area.Name)</div>
+    </div>
+    <div class="w-100 mb-2"></div>
+    <div class="row">
+        <strong class="col-md-2">Asset Name: </strong>
+        <div class="col">@Html.DisplayFor(model => model.Name)</div>
+    </div>
+    <div class="w-100 mb-2"></div>
+    <div class="row">
+        <strong class="col-md-2">Asset Code: </strong>
+        <div class="col">@Html.DisplayFor(model => model.AssetCode)</div>
+    </div>
+
+    @if (Request.IsAuthenticated && (User.IsInRole("Technician") || User.IsInRole("Manager") || User.IsInRole("System Admin")))
+        {
+    <div class="w-100 mb-2"></div>
+    <div class="row">
+        <strong class="col-md-2">Asset Type: </strong>
+        <div class="col">@Html.DisplayFor(model => model.AssetType.Name)</div>
+    </div>
+    <div class="w-100 mb-2"></div>
+    <div class="row">
+        <strong class="col-md-2">User Create: </strong>
+        <div class="col">@Html.DisplayFor(model => model.ApplicationUser.UserName)</div>
+    </div>
+    <div class="w-100 mb-2"></div>
+    <div class="row">
+        <strong class="col-md-2">Quantity: </strong>
+        <div class="col">@Html.DisplayFor(model => model.Quantity)</div>
+    </div>
+    <div class="w-100 mb-2"></div>
+    <div class="row">
+        <strong class="col-md-2">Start Date: </strong>
+        <div class="col">
+            @{
+                        var startDate = @Html.DisplayFor(model => model.StartDate).ToString();
+            }
+            @if (startDate.Equals("1900-01-01") || startDate == null)
+                    {
+            <div>N/A</div>
+                    }
+                    else
+                    {
+            @startDate
+                    }
+        </div>
+    </div>
+    <div class="w-100 mb-2"></div>
+    <div class="row">
+        <strong class="col-md-2">Description: </strong>
+        <div class="col">@Html.DisplayFor(model => model.Description)</div>
+    </div>
+    <div class="w-100 mb-2"></div>
+    <div class="row">
+        <strong class="col-md-2">Image: </strong>
+        <div class="col"><img src="@Html.DisplayFor(model => model.Image)" height="150px"></div>
+    </div>
+    <div class="w-100 mb-2"></div>
+    <div class="row">
+        <strong class="col-md-2">Created Date: </strong>
+        <div class="col">
+            @{
+                        var createAt = @Html.DisplayFor(model => model.CreatedAt).ToString();
+            }
+            @if (createAt.Equals("1900-01-01") || createAt.Equals(""))
+                    {
+            <div>N/A</div>
+                    }
+                    else if(@ViewBag.reportID!=null)
+                    {
+            @createAt
+                    }
+        </div>
+    </div>
+    <div class="w-100 mb-2"></div>
+    <div class="row">
+        <strong class="col-md-2">Modified Date: </strong>
+        <div class="col">
+            @{
+                        var updateAt = @Html.DisplayFor(model => model.UpdatedAt).ToString();
+
+            }
+            @if (updateAt.Equals("1900-01-01") || updateAt.Equals(""))
+                    {
+            <div>N/A</div>
+                    }
+                    else
+                    {
+            @updateAt
+                    }
+        </div>
+    </div>
+
+            if (ViewBag.AssetAttributeValueViewModel != null)
+            {
+                foreach (var item in ViewBag.AssetAttributeValueViewModel)
+                {
+    <div class="w-100 mb-2"></div>
+    <div class="row">
+        <strong class="col-md-2">@item.AssetTypeAttribute.Name: </strong>
+        <div class="col-md-2">@item.Value</div>
+    </div>
+                }
+            }
+        }
+    <div class="w-100 mb-4"></div>
+    <div class="row">
+        <div class="col-sm-3 col-md-2 mb-3 mr-0">
+            <a role="button" class="btn btn-primary" href='@Url.Action("ListReport", "Report",new {id = Model.ID})'>Create Report</a>
+        </div>
+        @if (Request.IsAuthenticated)
+        {
+            if (User.IsInRole("Technician") || User.IsInRole("Manager") || User.IsInRole("System Admin"))
+            {
+        <div class="col-sm-3 col-md-2 mr-0 mb-3">
+            @if (@Html.DisplayFor(model => model.AssetCode).ToString().StartsWith("A"))
+        {
+            <a role="button" class="btn btn-primary" href='@Url.Action("listReportArea", "Report", new { id = Model.ID })'>Process Report</a>
+        }
+        else
+        {
+            <a role="button" class="btn btn-primary" href='@Url.Action("Edit", "Report", new { @idA = @ViewBag.reportID })'>Process Report</a>
+        }
+        </div>
+        <div class="col-sm-3 col-md-2 mr-0 mb-3">
+            <a role="button" class="btn btn-primary" href='@Url.Action("Create", "MaintenanceDiary", new { @assetId = Model.ID })'>Maintenance</a>
+        </div>
+
+                    if (@Html.DisplayFor(model => model.AssetCode).ToString().StartsWith("A"))
+                    {
+        <div class="col-sm-3 col-md-2 mr-0 mb-3">
+            <a role="button" class="btn btn-primary" href='@Url.Action("AssetArea", "Asset",new {@id = Model.ID})'>Edit Asset In Area</a>
+        </div>
+                    }
+                    else
+                    {
+        <div class="col-sm-3 col-md-2 mr-0 mb-3">
+            <a role="button" class="btn btn-primary" href='@Url.Action("Edit", "Asset",new {@id = Model.ID})'>Edit Asset</a>
+        </div>
+                    }
+
+                }
+            }
+            else
+            {
+        <div class="col-sm-3 col-md-2 mr-0 mb-3">
+            @using (Html.BeginForm("ExternalLogin", "Account"))
+                    {
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="returnUrl" value="@Request.Path" />
+            <input type="hidden" name="provider" value="Google" />
+            <button type="submit" class="gg-btn">
+                <span class="gg-icon">
+                    <svg viewBox="0 0 366 372" xmlns="http://www.w3.org/2000/svg"><path d="M125.9 10.2c40.2-13.9 85.3-13.6 125.3 1.1 22.2 8.2 42.5 21 59.9 37.1-5.8 6.3-12.1 12.2-18.1 18.3l-34.2 34.2c-11.3-10.8-25.1-19-40.1-23.6-17.6-5.3-36.6-6.1-54.6-2.2-21 4.5-40.5 15.5-55.6 30.9-12.2 12.3-21.4 27.5-27 43.9-20.3-15.8-40.6-31.5-61-47.3 21.5-43 60.1-76.9 105.4-92.4z" id="Shape" fill="#EA4335" /><path d="M20.6 102.4c20.3 15.8 40.6 31.5 61 47.3-8 23.3-8 49.2 0 72.4-20.3 15.8-40.6 31.6-60.9 47.3C1.9 232.7-3.8 189.6 4.4 149.2c3.3-16.2 8.7-32 16.2-46.8z" id="Shape" fill="#FBBC05" /><path d="M361.7 151.1c5.8 32.7 4.5 66.8-4.7 98.8-8.5 29.3-24.6 56.5-47.1 77.2l-59.1-45.9c19.5-13.1 33.3-34.3 37.2-57.5H186.6c.1-24.2.1-48.4.1-72.6h175z" id="Shape" fill="#4285F4" /><path d="M81.4 222.2c7.8 22.9 22.8 43.2 42.6 57.1 12.4 8.7 26.6 14.9 41.4 17.9 14.6 3 29.7 2.6 44.4.1 14.6-2.6 28.7-7.9 41-16.2l59.1 45.9c-21.3 19.7-48 33.1-76.2 39.6-31.2 7.1-64.2 7.3-95.2-1-24.6-6.5-47.7-18.2-67.6-34.1-20.9-16.6-38.3-38-50.4-62 20.3-15.7 40.6-31.5 60.9-47.3z" fill="#34A853" /></svg>
+                </span>
+                <span class="gg-text">Login to report</span>
+            </button>
+                    }
+        </div>
+            }
+    </div>
+</dl>

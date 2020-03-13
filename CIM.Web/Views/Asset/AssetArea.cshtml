@@ -1,0 +1,106 @@
+﻿@model IEnumerable<CIM.Web.Models.AssetViewModel>
+
+@{
+    ViewBag.Title = "Report Management";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    var count = Model.ToList().Count;
+}
+<div class="row">
+    <div class="col-md-2">
+        <a role="button" class="btn btn-primary ml-2" href='@Url.Action("Create", "Asset", new { id = Model.FirstOrDefault().Area.ID })'>Create new asset</a>
+    </div>
+</div>
+
+<p></p>
+@if (count > 0)
+{
+<table id="table" class="table table-bordered">
+    <thead class="thead-light">
+        <tr>
+            <th>
+                Asset Name
+            </th>
+            <th>
+                Location
+            </th>
+            <th>
+                Area
+            </th>
+            <th>
+                Asset Type
+            </th>
+            <th>
+                Asset Code
+            </th>
+            <th>
+                User Create
+            </th>
+            <th>
+                Quantity
+            </th>
+            <th>
+                Start Date
+            </th>
+            <th>
+                In service
+            </th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+            {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Area.Location.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Area.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AssetType.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AssetCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ApplicationUser.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quantity)
+            </td>
+            <td>
+                @{
+                        var startDate = @Html.DisplayFor(modelItem => item.StartDate).ToString();
+                }
+                @if (startDate.Equals("1900-01-01") || startDate == null)
+                    {
+                <div>N/A</div>
+                    }
+                    else
+                    {
+                @startDate
+                    }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Active)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "mr-1" })
+            </td>
+        </tr>
+            }
+    </tbody>
+</table>
+}
+else
+{
+<div class="result-search-msg">
+    <p>No results found</p>
+</div>
+}

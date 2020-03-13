@@ -1,0 +1,114 @@
+﻿@model CIM.Web.Models.AssetAttributeValueViewModel
+@{
+    ViewBag.Title = "Create Attribute Value";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h5>Create Attribute</h5><p></p>
+@using (Html.BeginForm())
+{
+@Html.AntiForgeryToken()
+<table class="table table-borderless">
+    <thead>
+        <tr>
+            <th>@Html.LabelFor(model => model.AssetAttributeID, "AssetAttribute", htmlAttributes: new { @class = "control-label col-md-2" })</th>
+            <th>@Html.LabelFor(model => model.Value, htmlAttributes: new { @class = "control-label col-md-2" })</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody class="attributeList">
+        @if (ViewBag.AssetAttribute != null)
+            {
+                foreach (var item in ViewBag.AssetAttribute)
+                {
+        <tr class="attributeRow">
+            <td class="">@item.Name</td>
+            <td>
+                @Html.EditorFor(model => model.Value, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Value, "", new { @class = "text-danger" })
+            </td>
+            <td class="text-hide">@item.ID</td>
+        </tr>
+                }
+            }
+    </tbody>
+
+    <tfoot>
+        <tr>
+            <td>
+                <input id="btnSubmit" type="button" value="Save" class="btn btn-primary active" />
+            </td>
+            <td></td>
+            <td></td>
+        </tr>
+    </tfoot>
+</table>
+}
+@section scripts{
+
+    <script>
+        function getAllData() {
+            var data = [];
+            $('tbody tr').each(function () {
+                var AssetAttributeID = $(this).closest('tr').find('td:last').text();
+                var Value = $(this).find('#Value').val();
+                if (Value == '') {
+                    Value = 'N/A';
+                }
+                if (AssetAttributeID == '') {
+                    AssetAttributeID = 'N/A';
+                }
+                var alldata = {
+                    'AssetAttributeID': AssetAttributeID,
+                    'Value': Value,
+                }
+            data.push(alldata);
+            });
+            if (data == null) {
+                var defaultAttribute={
+                    'AssetAttributeID': 'N/A',
+                    'Value': 'N/A',
+                }
+                data.push(defaultAttribute);
+            }
+            console.log(data);
+            return data;
+        }
+
+        $('#btnSubmit').click(function () {
+            var data = JSON.stringify(getAllData());
+            var data1 = '@ViewBag.Asset';
+            var idArea = '@ViewBag.IdArea';
+            if (idArea != "") {
+                $.ajax({
+                    url: '/Asset/CreateAttributeValue',
+                    type: 'POST',
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify({ 'jsonAssetAttribute': data, 'asset': data1 }),
+                    success: function (data, data1) {
+                         window.location.href = '/Asset/AssetArea/' + idArea;
+                    },
+                    error: function () {
+                        //alert("Error while inserting data");
+                    }
+                });
+            } else {
+                $.ajax({
+                url: '/Asset/CreateAttributeValue',
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({ 'jsonAssetAttribute': data,'asset':data1 }),
+                    success: function (data, data1) {
+                    window.location.href = '@Url.Action("Index", "Asset")';
+                },
+                error: function () {
+                    //alert("Error while inserting data");
+                }
+            });
+            }
+
+        });
+    </script>
+}

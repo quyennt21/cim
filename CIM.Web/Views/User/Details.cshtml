@@ -1,0 +1,78 @@
+﻿@model CIM.Web.Models.UserViewModel
+
+@{
+    ViewBag.Title = "User Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-header">
+    <h4>User ID: @Html.DisplayFor(model => model.Id)</h4>
+</div>
+<hr />
+<div class="item-details">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayName("UserName:")
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.UserName)
+                    </dd>
+                    <dt>
+                        @Html.DisplayName("Full Name:")
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.FullName)
+                    </dd>
+                    <dt>
+                        @Html.DisplayName("Email:")
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Email)
+                    </dd>
+                    <dt>
+                        @Html.DisplayName("Role:")
+                    </dt>
+                    <dd>
+                        @if (ViewBag.rolesOfUser.Count > 0)
+                        {
+                        @ViewBag.rolesOfUser[0];
+                        }
+                    </dd>
+                    <dt>
+                        @Html.DisplayName("Active:")
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Active)
+                    </dd>
+                </dl>
+            </div>
+            <div class="col">
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayName("Created At:")
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.CreatedAt)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayName("Updated At:")
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.UpdatedAt)
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-offset-3 col-md-10">
+    <a class="btn btn-primary btn-edit" href="@Url.Action("Edit", new { id = Model.Id } )">Edit</a>
+    <a class="btn btn-link btn-back" href="@Url.Action("Index")">Back</a>
+</div>

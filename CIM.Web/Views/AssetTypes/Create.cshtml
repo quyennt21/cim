@@ -1,0 +1,142 @@
+﻿@model CIM.Model.Models.AssetType
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h5>AssetType</h5>
+
+@using (Html.BeginForm())
+{
+
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <div class="control-label col-md-2">Name:</div>
+            <div id="valueType" class="col-md-10">
+                <input type="text" class="form-control" id="nameTypeAsset" placeholder="Enter name Asset Type..." name="nameTypeAsset" required>
+                <span class="error" id="errorID"></span>
+            </div>
+        </div>
+    </div>
+
+    <table class="table table-borderless">
+        <div class="control-label col-md-2">Asset Attribute:</div>
+        <tbody class="attributeList">
+            <tr class="attributeRow">
+                <td>
+                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                </td>
+                <td><a href="javascript:void(0);" class="remRow">Remove</a></td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td>
+                    <a class="btnAdd btn">Add row</a>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input id="btnSubmit" type="button" value="Save" class="btn btn-primary active" />
+            @*<input type="submit" value="Create" class="btn btn-primary active" />*@
+            <p></p>
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    </div>
+
+}
+
+@section Scripts {
+    <script>
+        $(".btnAdd").click(function () {
+            var td1 = '<td>@Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })';
+            var td2 = '<td><a href="javascript:void(0);" class="remRow">Remove</a></td>';
+            $("tbody").append('<tr class="attributeRow">'+td1+td2+'</tr>')
+        });
+
+        $(".attributeList").on('click', '.remRow', function () {
+            $(this).closest('.attributeRow').remove();
+        });
+
+        function getAllData() {
+            var data = [];
+            $('tbody tr').each(function () {
+                var Name = $(this).find('#Name').val();
+                var alldata = {
+                    'Name': Name,
+                }
+                if (Name !== "") {
+                    data.push(alldata);
+                }
+
+            });
+            console.log(data);
+            return data;
+        }
+
+        function getNameAsset() {
+            var data = [];
+            $('#valueType').each(function() {
+                data = $(this).find('#nameTypeAsset').val();
+            });
+            if (data !== "") {
+                return data;
+            }
+            return null;
+        }
+        $('#btnSubmit').click(function (event) {
+            var data = JSON.stringify(getAllData());
+            var nameAssetType = JSON.stringify(getNameAsset());
+            var error_free = true;
+            var error_element=$("#errorID");
+            if (nameAssetType === "null") {
+                error_element.removeClass("error").addClass("error_show"); error_free = false;
+                error_element.text("The Name field is required");
+                error_free = false;
+            } else {
+                @*var listType = @testA;
+                console.log(listType);*@
+                error_free = true;
+                error_element.removeClass("error_show").addClass("error");
+            }
+            if (error_free) {
+                $.ajax({
+                url: '/AssetTypes/Create',
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({ 'jsonAssetAttribute': data,'nameAssetType':nameAssetType }),
+                success: function (error) {
+                    console.log(error);
+                    if (nameAssetType !== "null" && error === "false") {
+                        console.log("B");
+                        window.location.href = '@Url.Action("Index", "AssetTypes")';
+                    }
+                    if (error !== "false") {
+                        console.log(error+"");
+                        error_element.removeClass("error").addClass("error_show"); error_free = false;
+                        error_element.text(error);
+                        error_free = false;
+                    } else {   
+                        console.log("D");
+                        error_free = true;
+                        error_element.removeClass("error_show").addClass("error");
+                    }
+
+                },
+                error: function () {
+                    alert("Error while inserting data");
+                }
+                });
+            }
+
+        });
+    </script>
+}

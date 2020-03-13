@@ -1,0 +1,182 @@
+﻿@model CIM.Model.Models.QrAssetViewModel
+@{
+    ViewBag.Title = "Print QR Code";
+
+}
+<div>
+    <h2 class="float-right">Print Qr</h2>
+    <a role="button" class="btn btn-primary mr-1" href='@Url.Action("Search",new { locationSearch = ViewBag.locationSearch,
+                                                          typeSearch = ViewBag.typeSearch,
+                                                          SearchString = ViewBag.SearchString,
+                                                          page =ViewBag.page
+
+                                                      })'>Back to Qr</a>
+    @if (ViewBag.totalPage > 1)
+    {
+
+        var current = Request.QueryString["page"];
+
+        if (current == null)
+        {
+            current = "1";
+        }
+        int page = Int32.Parse(current);
+        var total = ViewBag.totalPage;
+    <nav class="mt-5">
+        <ul class="pagination justify-content-center">
+            <li class="page-item">
+                <a class="page-link" href="@Url.Action("PrintQr", new { page = 1 ,status =   ViewBag.status })">First</a>
+            </li>
+            @if (page > 1)
+                {
+            <li class="page-item">
+
+                <a class="page-link" href="@Url.Action("PrintQr", new { page = page-1,status =   ViewBag.status })">Previous</a>
+            </li>
+                }
+
+            @if (ViewBag.totalPage > 6)
+                {
+                    total = page + 5;
+
+                    if (page >= (ViewBag.totalPage - 5))
+                    {
+                        total = ViewBag.totalPage;
+                    }
+
+                }
+
+            @for (int i = page; i <= total; i++)
+                {
+
+            <li class="page-item @(page == i ? "disabled" : "")">
+                <a class="page-link" href="@Url.Action("PrintQr", new { page=i ,status =   ViewBag.status})">@i</a>
+            </li>
+                }
+
+            @if (page < ViewBag.totalPage)
+                {
+
+            <li class="page-item">
+                <a class="page-link" href="@Url.Action("PrintQr", new { page = page+1,status =   ViewBag.status })">Next</a>
+            </li>
+                }
+            <li class="page-item">
+                <a class="page-link" href="@Url.Action("PrintQr", new { page = ViewBag.totalPage,status =   ViewBag.status })">Last</a>
+            </li>
+        </ul>
+    </nav>
+    }
+    <button onclick="printDiv('print')" class="btn btn-primary float-right mr-1">Print</button>
+    <a role="button" class="btn btn-danger" href='@Url.Action("Resetlist", "Qr")'>Clear list print</a>
+</div>
+<br>
+<div id="Printmaster" class="d-flex justify-content-center align-items-center">
+    <page size="A4">
+        <div id="print">
+            <style>
+                #print{
+                    width:100%;
+                    height:100%;
+                }
+                .row {
+                    margin-left: 0 !important;
+                    margin-right: 0 !important;
+                }
+
+                .row-custom{
+                     margin-left: 0.7% !important;
+                }
+
+                .itemlabel {
+                    width: 33.33%;
+                    height: 12.5%;
+                    background-color: lavender;
+                }
+
+                .qrlabel {
+                    width: 50%;
+                    height: 100%;
+                }
+
+                .qr {
+                    width: 100%;
+                    height: 100%;
+                    margin-right: 10%;
+                }
+
+                .descriptionlabel {
+                    width: 50%;
+                    height: 100%;
+                }
+
+                .text {
+                    margin-top: 6%;
+                    display: inline-block;
+                    font-size: 3mm;
+                }
+
+                .size {
+                    width: 100%;
+                    height: 100%;
+                    margin-top: 3.9%;
+                }
+            </style>
+            <div class="size">
+                <div class="row row-custom">
+                    @for (int i = 0; i < Model.lstQr.Count; i++)
+                    {
+                        <div class="itemlabel">
+
+                            <div class="row ">
+                                <div class="qrlabel">
+                                    <img class="qr" src="/qr/generator?url=@Html.DisplayFor(Model => Model.lstQr[i].asset.ID)" alt="qr code">
+                                </div>
+                                <div class="descriptionlabel">
+                                    <div class="text">
+                                        <span>
+                                            ID: @Html.DisplayFor(Model => Model.lstQr[i].asset.ID)<br />
+                                        </span>
+                                        <span>
+                                            Code: @Html.DisplayFor(Model => Model.lstQr[i].asset.AssetCode)<br />
+                                        </span>
+                                        @if (Model.lstQr[i].asset.AssetCode.ToUpper().StartsWith("A"))
+                                        {
+                                            <span class="text-wrap">
+                                                Miêu tả: @Html.DisplayFor(Model => Model.lstQr[i].asset.Area.Name),<br />
+                                                @Html.DisplayFor(Model => Model.lstQr[i].asset.Area.Location.Name)
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-wrap">
+                                                Miêu tả: @Html.DisplayFor(Model => Model.lstQr[i].asset.Name),<br />
+                                                @Html.DisplayFor(Model => Model.lstQr[i].asset.Area.Name),<br />
+                                                @Html.DisplayFor(Model => Model.lstQr[i].asset.Area.Location.Name)
+                                            </span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+    </page>
+
+</div>
+<script>
+    function printDiv(divName) {
+        var printContents = document.getElementById(divName).innerHTML;
+        var originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = printContents;
+
+        window.print();
+
+        document.body.innerHTML = originalContents;
+
+    }
+</script>

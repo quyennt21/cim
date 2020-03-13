@@ -1,0 +1,31 @@
+﻿@{
+    var controller = HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString();
+}
+
+@if (!HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower().Equals("qr"))
+{
+       Session["var"] = null;
+       Session["all"] = null;
+}
+<nav class="navbar navbar-expand-lg navbar-light bg-light position-static">
+    <div class="container">
+        <a class="navbar-brand" href="/home">FPT Campus Infrastructure Management</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#cimBar" aria-controls="cimBar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="cimBar">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item @((controller.ToLower() == "home" || controller =="") ? "active": "" )">
+                    <a class="nav-link" href="/home">Home<span class="sr-only">(current)</span></a>
+                </li>
+                @if (Request.IsAuthenticated)
+                {
+                    <li class="nav-item @(controller.ToLower() == "myreport"  ? "active": "" )">
+                        <a class="nav-link" href="/myreport">My Report</a>
+                    </li>
+                }
+            </ul>
+            @Html.Partial("_Login")
+        </div>
+    </div>
+</nav>

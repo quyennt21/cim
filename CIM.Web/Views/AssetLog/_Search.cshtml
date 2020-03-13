@@ -1,0 +1,16 @@
+﻿@using (Html.BeginForm("Search", "AssetLog", FormMethod.Get, new { @class = "form-inline form-label-left mb-4 ", autocomplete = "off" }))
+{
+<div class="form-group mr-4">
+    <label class="mr-3" for="asset">Asset: </label>
+    <input type="search" class="form-control" id="asset" placeholder="Enter code or name..." value="@(ViewBag.assetSearch)" name="assetSearch">
+</div>
+<div class="form-group mr-4">
+    <label class="mr-3" for="asset">User: </label>
+    <input type="search" class="form-control" id="user" placeholder="Enter username..." value="@(ViewBag.userSearch)" name="userSearch">
+</div>
+<div class="form-group">
+    <!-- Submit button -->
+    <button class="btn btn-primary" type="submit">Search</button>
+</div>
+
+}

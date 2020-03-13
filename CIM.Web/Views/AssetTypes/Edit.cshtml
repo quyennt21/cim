@@ -1,0 +1,163 @@
+﻿@model CIM.Web.Models.AssetTypeViewModel
+
+@{
+    ViewBag.Title = "Delete Asset Type";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm())
+{
+@Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <h4>AssetType</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.ID)
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div id="valueType" class="col-md-10">
+            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", @id = "dataName" } })
+            <span class="error" id="errorID"></span>
+            @Html.Hidden("idAsset", Model.ID)
+        </div>
+    </div>
+
+    <table class="table table-borderless">
+        <div class="control-label col-md-2">Asset Attribute:</div>
+        <tbody class="attributeList">
+            @foreach (var item in ViewBag.AssetAttribute)
+                {
+            <tr class="attributeRow">
+                <td>
+                    <input type="search" class="form-control" id="NameAttribute" placeholder="Enter attribute..." value="@(item.Name)" name="NameAttribute">
+                    @Html.Hidden("idAttribute", (object)item.ID)
+                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                </td>
+                @* <td><a href="javascript:void(0);" class="remRow">Remove</a></td> *@
+            </tr>
+                }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td>
+                    <a class="btnAdd btn">Add row</a>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input id="btnSubmit" type="button" value="Save" class="btn btn-primary active" />
+            @*<input type="submit" value="Create" class="btn btn-primary active" />*@
+            <p></p>
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    </div>
+</div>
+}
+
+@section Scripts {
+    <script>
+        $(".btnAdd").click(function () {
+            //var td1 = '<td>@Html.Editor("NameAttribute", new { htmlAttributes = new { @class = "form-control" } })';
+            var td1 = '<td><input type="search" class="form-control" id="NameAttribute" placeholder="Enter attribute..." value=""></td>';
+            var td2 = '<td><a href="javascript:void(0);" class="remRow">Remove</a></td>';
+            $("tbody").append('<tr class="attributeRow">'+td1+td2+'</tr>')
+        });
+
+        $(".attributeList").on('click', '.remRow', function () {
+            $(this).closest('.attributeRow').remove();
+
+            var nameAssetType = JSON.stringify(getNameAsset());
+            console.log(nameAssetType);
+        });
+
+        function getAllData() {
+            var data = [];
+            $('tbody tr').each(function () {
+                var Name = $(this).find('#NameAttribute').val();
+                var ID = $(this).find('#idAttribute').val();
+                var alldata = {
+                    'Name': Name,
+                    'ID': ID,
+                    'Active':true,
+                }
+                data.push(alldata);
+            });
+            return data;
+        }
+
+        function getNameAsset() {
+            var data = [];
+            var alldata = '';
+            $('#valueType').each(function() {
+                var name = $(this).find('#dataName').val();
+                var ID = $(this).find('#idAsset').val();
+                alldata = {
+                    'ID': ID,
+                    'Name': name,
+                    'Active':true,
+                }
+                data.push(alldata);
+            });
+            return alldata;
+        }
+        function getNameAssetCheck() {
+            var data = [];
+            $('#valueType').each(function() {
+                data = $(this).find('#dataName').val();
+            });
+            if (data !== "") {
+                return data;
+            }
+            return null;
+        }
+        $('#btnSubmit').click(function () {
+            var data = JSON.stringify(getAllData());
+            var assetType = JSON.stringify(getNameAsset());
+            var checkName = JSON.stringify(getNameAssetCheck());
+            var error_free = true;
+            var error_element = $("#errorID");
+            console.log(checkName);
+            if (checkName === "null") {
+                error_element.removeClass("error").addClass("error_show"); error_free = false;
+                error_element.text("This field is required");
+                error_free = false;
+            } else {
+                error_free = true;
+                error_element.removeClass("error_show").addClass("error");
+            }
+            if (error_free) {
+                $.ajax({
+                url: '/AssetTypes/Edit',
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({ 'jsonAssetAttributes': data,'assetTypes':assetType }),
+                success: function (error) {
+                    if (checkName !== "null" && error === "false") {
+                        window.location.href = '@Url.Action("Index", "AssetTypes")';
+                    }
+                    if (error !== "false") {
+                        console.log(error+"");
+                        error_element.removeClass("error").addClass("error_show"); error_free = false;
+                        error_element.text(error);
+                        error_free = false;
+                    } else {   
+                        error_free = true;
+                        error_element.removeClass("error_show").addClass("error");
+                    }
+                    
+                },
+                error: function () {
+                    //alert("Error while inserting data");
+                }
+            });
+            }
+
+        });
+    </script>
+}

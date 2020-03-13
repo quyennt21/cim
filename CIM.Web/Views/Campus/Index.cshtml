@@ -1,0 +1,81 @@
+﻿@model CIM.Web.Infrastructure.PaginationSet<CIM.Web.Models.CampusViewModel>
+
+@{
+    ViewBag.Title = "Campus Management";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-header">
+    <div class="row">
+        <div class="col-md-4"><h3 class="mb-4">Campus Management</h3></div>
+    </div>
+    @Html.Partial("_Search")
+</div>
+@if (TempData["AlertMessage"] != null)
+{
+    <div id="AlertCampus" class="alert @TempData["AlertType"] hide">
+        @TempData["AlertMessage"]
+    </div>
+}
+@if (Model.Count > 0)
+{
+    <table class="table table-responsive-md table-bordered table-hover">
+        <thead class="thead-light">
+            <tr>
+                <th>
+                    @Html.DisplayName("Campus Name")
+                </th>
+                <th>
+                    @Html.DisplayName("Address")
+                </th>
+                <th>
+                    @Html.DisplayName("Telephone")
+                </th>
+                <th>
+                    @Html.DisplayName("In Service")
+                </th>
+                <th>
+                    @Html.DisplayName("Action")
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Telephone)
+                </td>
+                <td style="width: 8.33%" class="text-center">
+                    @Html.DisplayFor(modelItem => item.Active)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.ID }, new { @class = "mr-1" })|
+                    @Html.ActionLink("Details", "Details", new { id = item.ID })
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="result-search-msg">
+        <p>No results found</p>
+    </div>
+}
+@Html.Partial("_Pagination", Model)
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#AlertCampus').removeClass('hide');
+            $('#AlertCampus').delay(3000).slideUp(500);
+        });
+    </script>
+}

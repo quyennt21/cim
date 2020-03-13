@@ -1,0 +1,70 @@
+﻿@model CIM.Web.Models.ReportViewModel
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("Edit", "Report", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+@Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <h4>Update Report ID: @(Model.ID)</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.ID)
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.ReportAt)
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.UserReport)
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.RequestManager)
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.Asset)
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.CreatedAt)
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.Picture)
+
+    <div class="form-group">
+        <label class="control-label col-md-2" for="comment">Status:</label>
+        <div class="col-md-10">
+            @Html.DropDownList("Status", (IEnumerable<SelectListItem>)ViewBag.listStatus, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.status, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-2" for="comment">Comment:</label>
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Comment, new { htmlAttributes = new { @class = "form-control", @rows = "5" } })
+            @Html.ValidationMessageFor(model => model.Comment, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-2" for="alternative-materials">Alternative materials:</label>
+        <div class="col-md-10">
+            <textarea class="form-control" name="alternativeMaterials" id="alternativeMaterials" rows="5"></textarea>
+        </div>
+    </div>
+    <input type="hidden" class="form-control" id="reportArea" value="@ViewBag.checkReportArea" name="reportArea">
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-primary" />
+            <a href="@Url.Action("Index")" class="btn btn-link">Cancel</a>
+        </div>
+    </div>
+</div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
